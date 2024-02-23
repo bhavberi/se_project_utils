@@ -29,7 +29,7 @@ def encode_string(string, shift):
 def decode_string(string, shift):
     return encode_string(string, -shift)
 
-api_key = "vn-wDg7LT5bh7J2JimBeU2bW6EoenIMhtuAYOlavzJ0En7drqVo"
+api_key = "vn-Iw7bImQvmaH3TyyeHrUbW6EoenIMsny9hvWIAr08UodDYLEB"
 
 client = OpenAI(
   api_key=decode_string(api_key, 3),
