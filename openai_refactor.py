@@ -9,7 +9,7 @@ csv_path = "results/designCodeSmells.csv"
 directory = ["books-core/", "books-web/"]
 
 client = OpenAI(
-  api_key="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",
+  api_key="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",
 )
 
 def get_refactored_code(client, design_smell, source_code):
