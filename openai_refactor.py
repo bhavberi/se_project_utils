@@ -39,8 +39,8 @@ def get_refactored_code(client, design_smell, source_code):
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a refactoring system. Do not change class name."},
-            {"role": "user", "content": f'Refactor the following code to remove the {design_smell} smell: ``` java\n{source_code}\n```\n'}
+            {"role": "system", "content": "You are a refactoring system. Do not change class name. Do not refactor unless needed."},
+            {"role": "user", "content": f'If the following code contains the {design_smell} design smell, refactor it to remove this design smell. If there is no design smell, return nothing: ``` java\n{source_code}\n```\n'}
         ],
         temperature=0,
     )
@@ -76,13 +76,14 @@ for index, row in df.iterrows():
         refactored_code = get_refactored_code(client, design_smell, source_code)
         refactored_code_java = re.search(r'```java\n(.*?)\n```', refactored_code, re.DOTALL)
         if refactored_code_java is None:
-            continue
+            print("No refactoring needed")
         refactored_code_java = refactored_code_java.group(1)
         with open(file_path, 'w') as file:
             file.write(refactored_code_java)
             print(f"Refactored {file_path} with {design_smell} smell")
             count += 1
             pr_description += f"| {file_name} | {design_smell} |\n"
+    if(count >= 10):
         break
 
 pr_title = f"Refactored {count} smells"
