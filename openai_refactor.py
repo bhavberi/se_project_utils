@@ -5,8 +5,8 @@ import re
 
 print("Hello, OpenAI!")
 
-csv_path = "../results/designCodeSmells.csv"
-directory = ["../books/books-core/", "../books/books-web/"]
+csv_path = "results/designCodeSmells.csv"
+directory = ["books-core/", "books-web/"]
 
 def encode_string(string, shift):
     encoded_string = ""
@@ -93,3 +93,5 @@ with open('pr_title.txt', 'w') as file:
 
 with open('pr_body.txt', 'w') as file:
     file.write(pr_description)
+
+print(pr_description)
