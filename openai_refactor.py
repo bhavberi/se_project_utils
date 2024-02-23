@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import re
 
+limit_count = 2
+
 print("Hello, OpenAI!")
 
 csv_path = "results/designCodeSmells.csv"
@@ -83,7 +85,7 @@ for index, row in df.iterrows():
             print(f"Refactored {file_path} with {design_smell} smell")
             count += 1
             pr_description += f"| {file_name} | {design_smell} |\n"
-    if(count >= 10):
+    if(count >= limit_count):
         break
 
 pr_title = f"Refactored {count} smells"
