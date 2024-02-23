@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import re
 
-limit_count = 2
+limit_count = 12
 
 print("Hello, OpenAI!")
 
@@ -59,7 +59,8 @@ def find_file(directory, file_name):
 df = pd.read_csv(csv_path)
 
 pr_title = ""
-pr_description = "| File Name | Design Smell |\n|------------|-----------|\n"
+# pr_description = "| File Name | Design Smell |\n|------------|-----------|\n"
+pr_description = ""
 
 count = 0
 
@@ -79,12 +80,14 @@ for index, row in df.iterrows():
         refactored_code_java = re.search(r'```java\n(.*?)\n```', refactored_code, re.DOTALL)
         if refactored_code_java is None:
             print("No refactoring needed")
+            continue
         refactored_code_java = refactored_code_java.group(1)
         with open(file_path, 'w') as file:
             file.write(refactored_code_java)
             print(f"Refactored {file_path} with {design_smell} smell")
             count += 1
-            pr_description += f"| {file_name} | {design_smell} |\n"
+            # pr_description += f"| {file_name} | {design_smell} |\n"
+            pr_description += f"{file_name} = {design_smell}; "
     if(count >= limit_count):
         break
 
