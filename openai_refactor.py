@@ -93,3 +93,5 @@ with open('pr_title.txt', 'w') as file:
 
 with open('pr_body.txt', 'w') as file:
     file.write(pr_description)
+
+print(pr_description)
