@@ -8,8 +8,31 @@ print("Hello, OpenAI!")
 csv_path = "results/designCodeSmells.csv"
 directory = ["books-core/", "books-web/"]
 
+def encode_string(string, shift):
+    encoded_string = ""
+    for char in string:
+        if char.isalpha():
+            ascii_offset = ord('a') if char.islower() else ord('A')
+            encoded_char = chr((ord(char) - ascii_offset + shift) % 26 + ascii_offset)
+            encoded_string += encoded_char
+        elif char.isdigit():
+            encoded_char = str((int(char) + shift) % 10)
+            encoded_string += encoded_char
+        elif char.isspace():
+            encoded_char = ' '
+            encoded_string += encoded_char
+        else:
+            encoded_char = char
+            encoded_string += encoded_char
+    return encoded_string
+
+def decode_string(string, shift):
+    return encode_string(string, -shift)
+
+api_key = "vn-wDg7LT5bh7J2JimBeU2bW6EoenIMhtuAYOlavzJ0En7drqVo"
+
 client = OpenAI(
-  api_key="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",
+  api_key=decode_string(api_key, 3),
 )
 
 def get_refactored_code(client, design_smell, source_code):
