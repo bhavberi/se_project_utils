@@ -3,25 +3,13 @@ import os
 import pandas as pd
 import re
 
-def list_files_recursive(directory, recursive=True):
-    for root, dirs, files in os.walk(directory):
-        level = root.replace(directory, '').count(os.sep)
-        indent = ' ' * 4 * (level)
-        print('{}{}/'.format(indent, os.path.basename(root)))
-        sub_indent = ' ' * 4 * (level + 1)
-        for file in files:
-            print('{}{}'.format(sub_indent, file))
-
-# Call the function with the desired directory
-# list_files_recursive('./')
-
 print("Hello, OpenAI!")
 
 csv_path = "results/designCodeSmells.csv"
 directory = ["books-core/", "books-web/"]
 
 client = OpenAI(
-  api_key="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",
+  api_key="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",
 )
 
 def get_refactored_code(client, design_smell, source_code):
