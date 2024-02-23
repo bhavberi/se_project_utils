@@ -76,3 +76,4 @@ for index, row in df.iterrows():
         with open(file_path, 'w') as file:
             file.write(refactored_code_java)
             print(f"Refactored {file_path} with {design_smell} smell")
+        break
