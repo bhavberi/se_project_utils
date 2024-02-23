@@ -5,8 +5,8 @@ import re
 
 print("Hello, OpenAI!")
 
-csv_path = "results/designCodeSmells.csv"
-directory = ["books-core/", "books-web/"]
+csv_path = "../results/designCodeSmells.csv"
+directory = ["../books/books-core/", "../books/books-web/"]
 
 def encode_string(string, shift):
     encoded_string = ""
@@ -56,6 +56,11 @@ def find_file(directory, file_name):
 
 df = pd.read_csv(csv_path)
 
+pr_title = ""
+pr_description = "| File Name | Design Smell |\n|------------|-----------|\n"
+
+count = 0
+
 for index, row in df.iterrows():
     design_smell = row['Code Smell']
     file_name = row['Type Name']
@@ -76,4 +81,15 @@ for index, row in df.iterrows():
         with open(file_path, 'w') as file:
             file.write(refactored_code_java)
             print(f"Refactored {file_path} with {design_smell} smell")
+            count += 1
+            pr_description += f"| {file_name} | {design_smell} |\n"
         break
+
+pr_title = f"Refactored {count} smells"
+pr_description += "\n"
+
+with open('pr_title.txt', 'w') as file:
+    file.write(pr_title)
+
+with open('pr_body.txt', 'w') as file:
+    file.write(pr_description)
