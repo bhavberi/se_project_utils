@@ -1,16 +1,54 @@
-import openai
+from openai import OpenAI
 import os
+import pandas as pd
+import re
 
 print("Hello, OpenAI!")
 
-def list_files_recursive(directory):
-    for root, dirs, files in os.walk(directory):
-        level = root.replace(directory, '').count(os.sep)
-        indent = ' ' * 4 * (level)
-        print('{}{}/'.format(indent, os.path.basename(root)))
-        sub_indent = ' ' * 4 * (level + 1)
-        for file in files:
-            print('{}{}'.format(sub_indent, file))
+csv_path = "../results/designCodeSmells.csv"
+directory1 = "../books/books-core/"
+directory2 = "../books/books-web/"
 
-# Call the function with the desired directory
-# list_files_recursive('./')
+client = OpenAI(
+  api_key="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",
+)
+
+def get_refactored_code(client, design_smell, source_code):
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a refactoring system. Do not change class name."},
+            {"role": "user", "content": f'Refactor the following code to remove the {design_smell} smell: ``` java\n{source_code}\n```\n'}
+        ],
+        temperature=0,
+    )
+    refactored_code = response.choices[0].message.content
+    return refactored_code
+
+def find_file(directory, file_name):
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file == file_name:
+                return os.path.join(root, file)
+    return None
+
+df = pd.read_csv(csv_path)
+
+for index, row in df.iterrows():
+    design_smell = row['Code Smell']
+    file_name = row['Type Name']
+    file_name += ".java"
+    file_path = find_file(directory1, file_name)
+    if(file_path == None):
+        file_path = find_file(directory2, file_name)
+    if file_path:
+        with open(file_path, 'r') as file:
+            source_code = file.read()
+        refactored_code = get_refactored_code(client, design_smell, source_code)
+        refactored_code_java = re.search(r'```java\n(.*?)\n```', refactored_code, re.DOTALL)
+        if(refactored_code_java == None):
+            continue
+        refactored_code_java = refactored_code_java.group(1)
+        with open(file_path, 'w') as file:
+            file.write(refactored_code_java)
+            print(f"Refactored {file_path} with {design_smell} smell")
